@@ -8,6 +8,7 @@ use App\Models\Category;
 
 class HomeController extends Controller
 {
+    //hi
     public function index(Request $request)
     {
     
