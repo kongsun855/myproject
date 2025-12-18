@@ -123,10 +123,12 @@
           <!-- Desktop Right Side -->
           <div class="hidden md:flex items-center gap-6">
             <a href="#" class="text-green-600 text-xl font-medium hover:text-green-400 transition">Profile</a>
+            <a href="{{ route('login') }}">
             <button
               class="px-8 h-11 bg-transparent border border-amber-100 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition">
               Sign in
             </button>
+            </a>
           </div>
 
           <!-- Mobile Menu Button -->

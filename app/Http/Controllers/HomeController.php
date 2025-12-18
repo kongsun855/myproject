@@ -18,6 +18,7 @@ class HomeController extends Controller
         $post = Post::when($categoryId, function ($query) use ($categoryId) {
         return $query->where('category_id', $categoryId);
         })
+        //search
         ->when($request->search, function ($query,$search)  {
         $query->where('title', 'LIKE','%'.$search.'%');
         })
