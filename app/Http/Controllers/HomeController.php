@@ -17,7 +17,11 @@ class HomeController extends Controller
 
         $post = Post::when($categoryId, function ($query) use ($categoryId) {
         return $query->where('category_id', $categoryId);
-        })->get();
+        })
+        ->when($request->search, function ($query,$search)  {
+        $query->where('title', 'LIKE','%'.$search.'%');
+        })
+        ->get();
         $categories = Category::all();
 
         return view('index', compact('post', 'categories'));

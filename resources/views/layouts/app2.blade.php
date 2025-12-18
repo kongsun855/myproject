@@ -106,8 +106,13 @@
         <!-- Navigation Bar -->
         <nav class="flex flex-wrap items-center justify-between gap-4 px-6 py-5 md:px-8">
           <!-- Search -->
-          <input type="text" placeholder="Search here"
+          <form action="{{ route('home') }}" method="get">
+            @foreach (collect(request()->query())->only(['category_id']) as $key =>$value )
+              <input type="hidden" mame="{{ $key }}" value="{{ $value }}" />
+            @endforeach
+          <input type="text" placeholder="Search here" name="search"
             class="hidden md:block bg-transparent border border-white text-white placeholder-white/70 text-center rounded-xl h-12 w-56 focus:outline-none focus:ring-2 focus:ring-white/50 transition" />
+            </form>
 
           <!-- Logo -->
           <a href="/">
