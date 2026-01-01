@@ -22,7 +22,7 @@
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": "true",
-        "APP_URL": "https://sunnews-eight.vercel.app/",
+        "APP_URL": "https://myproject-ten-puce.vercel.app/",
         "APP_KEY": "base64:lqQBsqHbLqfJDn2ROIxr7KyyKVmTomebhgPy3mUpGaQ=",
 
         "APP_CONFIG_CACHE": "/tmp/config.php",
