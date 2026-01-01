@@ -39,7 +39,7 @@ Route::prefix('admin')
     Route::resource('posts', PostController::class);   // ← now creates admin.posts.store etc.
 });
 
-Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
-Route::get('/setting', [SettingController::class, 'index'])->name('setting');
+// Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
+// Route::get('/setting', [SettingController::class, 'index'])->name('setting');
 
 require __DIR__.'/auth.php';
