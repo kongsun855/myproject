@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 class PostController extends Controller
@@ -45,14 +46,34 @@ class PostController extends Controller
     $data = $request->all();
 
     // Handle image upload
-    if ($request->hasFile('featured_image')) {
-        $image = $request->file('featured_image');
-        $filename = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-        $path = $image->storeAs('posts', $filename, 'public');
-        $data['featured_image'] = $path;
-    }
 
-    $data['user_id'] = auth()->id();
+
+    if ($request->hasFile('featured_image')) {
+    $image = $request->file('featured_image');
+
+    $filename = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+
+    // Store in B2 under "posts/{filename}"
+    $path = 'posts/' . $filename;
+
+    // Upload to Backblaze B2
+    Storage::disk('b2')->putFileAs('posts', $image, $filename, [
+        'visibility' => 'public', // or 'private'
+        'Metadata' => [
+            'ContentType' => $image->getMimeType(),
+        ],
+    ]);
+
+    // Save the path (relative key) to your DB
+    $data['featured_image'] = $path;
+
+    // If you need a public URL:
+    // For public buckets, this will generate a URL via the S3 driver
+    $data['featured_image_url'] = Storage::disk('b2')->url($path);
+}
+
+
+    $data['user_id'] = Auth::id();
     $data['slug'] = $request->filled('slug') ? Str::slug($request->slug) : Str::slug($request->title);
 
     Post::create($data);
@@ -98,32 +119,24 @@ class PostController extends Controller
     }
 
     // Handle featured image perfectly
-   
+    if ($request->hasFile('featured_image')) {
+        // Delete old image
+        if ($post->featured_image) {
+            Storage::disk('public')->delete($post->featured_image);
+        }
+        $validated['featured_image'] = $request->file('featured_image')->store('posts', 'public');
 
-if ($request->hasFile('featured_image')) {
-    $image = $request->file('featured_image');
+    } elseif ($request->has('remove_image')) {
+        // User wants to delete the image
+        if ($post->featured_image) {
+            Storage::disk('public')->delete($post->featured_image);
+        }
+        $validated['featured_image'] = null;
 
-    $filename = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-
-    // Store in B2 under "posts/{filename}"
-    $path = 'posts/' . $filename;
-
-    // Upload to Backblaze B2
-    Storage::disk('b2')->putFileAs('posts', $image, $filename, [
-        'visibility' => 'public', // or 'private'
-        'Metadata' => [
-            'ContentType' => $image->getMimeType(),
-        ],
-    ]);
-
-    // Save the path (relative key) to your DB
-    $data['featured_image'] = $path;
-
-    // If you need a public URL:
-    // For public buckets, this will generate a URL via the S3 driver
-    $data['featured_image_url'] = Storage::disk('b2')->url($path);
-}
-
+    } else {
+        // No new file + no remove → keep current image
+        unset($validated['featured_image']);
+    }
 
     $post->update($validated);
 
