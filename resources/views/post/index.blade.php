@@ -19,6 +19,7 @@
                     <thead>
                         <tr>
                             <th class="px-6 py-4 text-left text-gray-900 dark:text-gray-100">ID</th>
+                            <th class="px-6 py-4 text-left text-gray-900 dark:text-gray-100">Cover</th>
                             <th class="px-6 py-4 text-left text-gray-900 dark:text-gray-100">Title</th>
                             <th class="px-6 py-4 text-left text-gray-900 dark:text-gray-100">Content</th>
                             <th class="px-6 py-4 text-left text-gray-900 dark:text-gray-100">Category</th>
@@ -29,6 +30,7 @@
                     <tbody>
                         @foreach($post as $post)
                             <tr class="border-t border-gray-200 dark:border-gray-700">
+                                <td class="px-6 py-4 text-gray-900 dark:text-gray-100"><img src="{{ asset('storage/' . $post->featured_image_url) }}" alt="News" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" /></td>
                                 <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ $post->id }}</td>
                                 <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ $post->title }}</td>
                                 <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ $post->content }}</td>
