@@ -10,7 +10,7 @@
       
       <a href="{{ route('article', $post->id) }}">
       <article  class="relative group overflow-hidden rounded-2xl h-96 cursor-pointer transition-transform duration-300 hover:-translate-y-3">
-        <img src="{{ asset('storage/' . $post->featured_image) }}" alt="News" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+        <img src="{{ asset('storage/' . $post->featured_image_url) }}" alt="News" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
         <p class="absolute bottom-24 left-6 right-6 text-white text-base leading-relaxed z-10">
           {{ $post->title }}
